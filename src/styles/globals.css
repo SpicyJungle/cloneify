@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.collectionScroller::-webkit-scrollbar {
+    /* width: 0px; */
+    background: transparent;
+}
+
+.collectionScroller::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 0px;
+    transition: all 0.8s ease-in-out;
+}
+
+.collectionScroller:hover::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 0px;
+
+    transition: all 0.8s ease-in-out;
+}
