@@ -41,7 +41,6 @@ export const Header = () => {
               className="h-4/6 text-stone-400 hover:scale-105 hover:text-white"
               onClick={(e) => {
                 e.preventDefault();
-                signIn("spotify");
               }}
             >
               Sign Up
@@ -50,7 +49,6 @@ export const Header = () => {
               className="h-11 w-32 rounded-full bg-white p-2 text-black hover:scale-105"
               onClick={(e) => {
                 e.preventDefault();
-                signIn("spotify");
               }}
             >
               Log in
