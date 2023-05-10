@@ -34,25 +34,26 @@ const Home: NextPage = () => {
               },
               {
                 title: "Deep Focus",
-                description: "Keep calm and focus with ambient and post-rock music.",
+                description:
+                  "Keep calm and focus with ambient and post-rock music.",
                 image:
                   "https://i.scdn.co/image/ab67706f000000025551996f500ba876bda73fa5",
                 key: "deep-focus",
               },
-              // {
-              //   title: "Instrumental Study",
-              //   description: "Focus with soft study music in the background.",
-              //   image:
-              //   "https://i.scdn.co/image/ab67706f00000002fe24d7084be472288cd6ee6c",
-              //   key: "instrumental-study",
-              // },
-              // {
-              //   title: "Focus Flow",
-              //   description: "Uptempo instumental hip-hop beats.",
-              //   image:
-              //   "https://i.scdn.co/image/ab67706f00000002724554ed6bed6f051d9b0bfc",
-              //   key: "focus-flow",
-              // },
+              {
+                title: "Instrumental Study",
+                description: "Focus with soft study music in the background.",
+                image:
+                  "https://i.scdn.co/image/ab67706f00000002fe24d7084be472288cd6ee6c",
+                key: "instrumental-study",
+              },
+              {
+                title: "Focus Flow",
+                description: "Uptempo instumental hip-hop beats.",
+                image:
+                  "https://i.scdn.co/image/ab67706f00000002724554ed6bed6f051d9b0bfc",
+                key: "focus-flow",
+              },
               // {
               //   title: "Beats to think to",
               //   description: "Focus with deep techno and tech house.",
@@ -60,8 +61,8 @@ const Home: NextPage = () => {
               //   "https://i.scdn.co/image/ab67706f0000000296e08a91ef3c7a6e7bfaa9a6",
               //   key: "beats-to-think-to",
               // }
-            ]} />
-          
+            ]}
+          />
         </div>
       </div>
     </Layout>
