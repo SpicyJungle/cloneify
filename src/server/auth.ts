@@ -37,19 +37,34 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    jwt({ token, account, profile }) {
+      if (account) {
+        token.accessToken = account.access_token as string;
+        token.id = account.userId;
+      }
+      return token;
+    },
+    session({ session, token, user}) {
+      session.accessToken = token.accessToken;
+      if (session.user) {
+        session.user.id = token.id as string;
+      }
+      return session;
+    }
   },
   adapter: PrismaAdapter(prisma),
+  session: {
+    strategy: "jwt",
+  },
   providers: [
     SpotifyProvider({
       clientId: env.SPOTIFY_CLIENT_ID,
       clientSecret: env.SPOTIFY_CLIENT_SECRET,
+      authorization: {
+        params: {
+          scope: ["user-follow-read", "user-read-playback-state", "playlist-read-private", "playlist-read-collaborative", "user-top-read", "user-read-recently-played", "user-library-read"].join(" ")
+        }
+      }
     }),
     /**
      * ...add more providers here.

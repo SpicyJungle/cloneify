@@ -1,67 +1,172 @@
 import { type NextPage } from "next";
-import Head from "next/head";
-import Link from "next/link";
-import { signIn, signOut, useSession } from "next-auth/react";
-
-import { api } from "~/utils/api";
-import { Sidebar } from "~/components/sidebar";
-import { Header } from "~/components/header";
-import { Player } from "~/components/player";
+import { useSession } from "next-auth/react";
+import { useState, useEffect } from "react";
 import { Layout } from "~/components/Layout";
 import { PlaylistSection } from "~/components/playlistSection";
-
-interface playlistCardInfo {
-  title: string;
-  description: string;
-  image: string;
-  key: string;
-}
+import { RecentlyPlayedCard } from "~/components/recentlyPlayedCard";
+import useRecentTracks from "~/hooks/useRecentTracks";
+import useSavedAlbums from "~/hooks/useSavedAlbums";
+import useSpotifyPlaylists from "~/hooks/useSpotifyPlaylists";
+import useFollowedArtists from "~/hooks/useFollowedArtists";
+import type { Album } from "~/types/album";
+import type { Playlist } from "~/types/playlist";
 
 const Home: NextPage = () => {
+  const { data: session, status } = useSession();
+  const recentlyPlayed = useRecentTracks(session?.accessToken ?? "");
+  const playlists = useSpotifyPlaylists(session?.accessToken ?? "");
+  const followedArtist = useFollowedArtists(session?.accessToken ?? "");
+  const [cardInfos, setCardInfos] = useState<(Playlist | Album)[]>([]);
+  const savedAlbums = useSavedAlbums(session?.accessToken ?? "", 50);
+
+  useEffect(() => {
+    function getVerticalItemCardInfo() {
+      if (recentlyPlayed?.items) {
+        const foundContexts: string[] = [];
+        const itms = recentlyPlayed.items;
+        itms.forEach((item) => {
+          if (
+            foundContexts.includes(item.context?.href ?? "") ||
+            foundContexts.length >= 6 ||
+            item.context === null
+          ) {
+            return false;
+          } else {
+            foundContexts.push(item.context?.href ?? "");
+            return true;
+          }
+        });
+
+        if (foundContexts.length < 6) {
+          if (!savedAlbums.albums) return foundContexts;
+          const savedAlbumsItems = savedAlbums.albums;
+
+          savedAlbumsItems.forEach(
+            (item: { added_at: string; album: Album }) => {
+              if (
+                foundContexts.includes(item.album.href) ||
+                foundContexts.length >= 6 ||
+                !item.album.href
+              ) {
+                return false;
+              } else {
+                foundContexts.push(item.album.href);
+                return true;
+              }
+            }
+          );
+        }
+
+        return foundContexts;
+      }
+    }
+
+    const fetchResults = async () => {
+      const cardInfoUrls = getVerticalItemCardInfo();
+      if (!cardInfoUrls) return;
+
+      const fetchPromises = cardInfoUrls.map(async (url) => {
+        const response = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${session?.accessToken ?? ""}`,
+          },
+        });
+        const itemData = (await response.json()) as object;
+
+        return itemData;
+      });
+
+      const cardInfos = (await Promise.all(fetchPromises)) as (
+        | Playlist
+        | Album
+      )[];
+      setCardInfos(cardInfos);
+    };
+
+    void fetchResults();
+  }, [session?.accessToken, recentlyPlayed.items, savedAlbums.albums]);
+
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
+
+  const today = new Date();
+  const hour = today.getHours();
+
   return (
     <Layout>
       <div className="h-full">
-        <div className="h-full">
-          <PlaylistSection
-            sectionTitle="Focus"
-            playlists={[
-              {
-                title: "Peaceful Piano",
-                description: "Relax and indulge with beautiful piano pieces",
-                image:
-                  "https://i.scdn.co/image/ab67706f00000002ca5a7517156021292e5663a6",
-                key: "peaceful-piano",
-              },
-              {
-                title: "Deep Focus",
-                description: "Keep calm and focus with ambient and post-rock music.",
-                image:
-                  "https://i.scdn.co/image/ab67706f000000025551996f500ba876bda73fa5",
-                key: "deep-focus",
-              },
-              // {
-              //   title: "Instrumental Study",
-              //   description: "Focus with soft study music in the background.",
-              //   image:
-              //   "https://i.scdn.co/image/ab67706f00000002fe24d7084be472288cd6ee6c",
-              //   key: "instrumental-study",
-              // },
-              // {
-              //   title: "Focus Flow",
-              //   description: "Uptempo instumental hip-hop beats.",
-              //   image:
-              //   "https://i.scdn.co/image/ab67706f00000002724554ed6bed6f051d9b0bfc",
-              //   key: "focus-flow",
-              // },
-              // {
-              //   title: "Beats to think to",
-              //   description: "Focus with deep techno and tech house.",
-              //   image:
-              //   "https://i.scdn.co/image/ab67706f0000000296e08a91ef3c7a6e7bfaa9a6",
-              //   key: "beats-to-think-to",
-              // }
-            ]} />
-          
+        <div className="flex h-full w-full flex-col gap-y-4">
+          <div className="flex h-1/3 flex-col">
+            <h3 className="mb-2 flex flex-row justify-between text-3xl font-bold text-white">
+              {hour > 18 || hour < 3
+                ? "Good Evening"
+                : hour > 12
+                ? "Good Afternoon"
+                : "Good Morning"}
+            </h3>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {cardInfos?.map((item: Album | Playlist) => {
+                return (
+                  <RecentlyPlayedCard
+                    key={item.id}
+                    data={{
+                      title: item.name,
+                      image: item?.images[0]?.url ?? "",
+                    }}
+                  />
+                );
+              })}
+            </div>
+          </div>
+          <div className="flex h-full flex-col gap-y-4">
+            {session?.accessToken && (
+              <>
+                <PlaylistSection
+                  playlists={
+                    playlists?.playlists?.map((item) => {
+                      return {
+                        title: item.name,
+                        image: item.images[0]?.url ?? "",
+                        description: item.description,
+                        key: item.id,
+                      };
+                    }) ?? []
+                  }
+                  sectionTitle="Your Playlists"
+                  isArtists={false}
+                />
+                <PlaylistSection
+                  playlists={
+                    followedArtist?.response?.map((item) => {
+                      return {
+                        title: item.name,
+                        image: item.images[0]?.url ?? "",
+                        description: "Artist",
+                        key: item.id,
+                      };
+                    }) ?? []
+                  }
+                  sectionTitle="Your favorite artists"
+                  isArtists={true}
+                />
+                <PlaylistSection 
+                  playlists={
+                    savedAlbums.albums.map((item) => {
+                      return {
+                        title: item.album.name,
+                        image: item.album.images[0]?.url ?? "",
+                        description: item.album.artists[0]?.name ?? "",
+                        key: item.album.id,
+                      };
+                    })
+                  }
+                  sectionTitle="Saved albums"
+                  isArtists={false}
+                  />
+              </>
+            )}
+          </div>
         </div>
       </div>
     </Layout>
@@ -69,27 +174,3 @@ const Home: NextPage = () => {
 };
 
 export default Home;
-
-const AuthShowcase: React.FC = () => {
-  const { data: sessionData } = useSession();
-
-  const { data: secretMessage } = api.example.getSecretMessage.useQuery(
-    undefined, // no input
-    { enabled: sessionData?.user !== undefined }
-  );
-
-  return (
-    <div className="flex flex-col items-center justify-center gap-4">
-      <p className="text-center text-2xl text-white">
-        {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
-        {secretMessage && <span> - {secretMessage}</span>}
-      </p>
-      <button
-        className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-        onClick={sessionData ? () => void signOut() : () => void signIn()}
-      >
-        {sessionData ? "Sign out" : "Sign in"}
-      </button>
-    </div>
-  );
-};
