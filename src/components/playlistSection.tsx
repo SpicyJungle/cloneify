@@ -18,37 +18,51 @@ export const PlaylistSection = ({
   isArtists: boolean;
 }) => {
 
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [maxCards, setMaxCards] = useState(0);
+  const [visiblePlaylists, setVisiblePlaylists] = useState<playlistCardInfo[]>([]);
+  const containerRef = useRef<HTMLDivElement | null>(null); // Ref to the container element
 
+  
+  // Recalculate on window resize
   useEffect(() => {
-    const calculateMaxCards = () => {
+    const calculateVisiblePlaylists = () => {
       if (containerRef.current) {
-        const containerWidth = containerRef.current.clientWidth;
-        const cardWidth = 160+25;
-        const maxCards = Math.floor(containerWidth / cardWidth);
-        setMaxCards(maxCards);
+        const containerWidth = containerRef.current.offsetWidth;
+        const minCardWidth = 170;
+        const spacing = 8;
+        const maxCardsPerRow = Math.floor(
+          (containerWidth) / (minCardWidth + spacing)
+        );
+  
+        setVisiblePlaylists(playlists.slice(0, maxCardsPerRow));
       }
     };
 
-    calculateMaxCards();
-    window.addEventListener("resize", calculateMaxCards);
+    calculateVisiblePlaylists();
+    window.addEventListener('resize', calculateVisiblePlaylists);
     return () => {
-      window.removeEventListener("resize", calculateMaxCards);
-    }
+      window.removeEventListener('resize', calculateVisiblePlaylists);
+    };
+  }, [playlists]);
 
-  }, []);
-
-  const visibleCards = playlists.slice(0, maxCards);
-
-  return (
-    <div className="">
-      <h3 className="mb-2 text-white font-bold text-2xl flex flex-row justify-between"><span className="hover:underline cursor-pointer">{sectionTitle}</span> <span className=" text-sm text-[#848484] hover:underline cursor-pointer">Show all</span></h3>
-      <div className="playlistSection flex flex-wrap h-2/5 flex-row gap-x-6 w-full" ref={containerRef}>
-        {visibleCards.map((playlist: playlistCardInfo) => {
-          return <PlaylistCard key={playlist.key} data={{...playlist, isArtists}}/>;
+  return ( 
+    <div className="w-full">
+      <h3 className="text-3xl text-white font-bold hover:underline">{sectionTitle}</h3>
+      <div ref={containerRef} className="grid grid-cols-cards gap-2 mt-4">
+        {visiblePlaylists.map((item) => {
+          return (
+            <PlaylistCard
+              key={item.key}
+              data={{
+                title: item.title,
+                description: item.description,
+                image: item.image,
+                key: item.key,
+                isArtists: isArtists,
+              }}
+            />
+          );
         })}
-      </div>
     </div>
+  </div>
   );
 };

@@ -19,3 +19,14 @@
 
     transition: all 0.8s ease-in-out;
 }
+.hiddenScroller::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+    background: transparent;
+}
+
+.hiddenScroller::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 0px;
+    transition: all 0.8s ease-in-out;
+}

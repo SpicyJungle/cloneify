@@ -12,44 +12,8 @@ import type { Artist } from "~/types/artist";
 import type { Album } from "~/types/album";
 import { useState } from "react";
 import type { PlayerResponse } from "~/types/PlayerResponse";
-
-interface Playlist {
-  collaborative: boolean;
-  description: string;
-  external_urls: {
-    spotify: string;
-  };
-  href: string;
-  id: string;
-  images: {
-    height: number;
-    url: string;
-    width: number;
-  }[];
-  name: string;
-  owner: {
-    external_urls: {
-      spotify: string;
-    };
-    followers: {
-      href: null;
-      total: number;
-    };
-    href: string;
-    id: string;
-    type: string;
-    uri: string;
-    display_name: string;
-  };
-  public: boolean;
-  snapshot_id: string;
-  tracks: {
-    href: string;
-    total: number;
-  };
-  type: string;
-  uri: string;
-}
+import type { Playlist } from "~/types/playlist";
+import Link from "next/link";
 
 type DataProps = {
   data: PlayerResponse | null;
@@ -130,9 +94,9 @@ export const Sidebar: React.FC<DataProps> = ({ data }: DataProps) => {
       <div className="flex h-full max-h-full w-full flex-col gap-y-2 text-white">
         <ul className="flex h-min w-full flex-col gap-y-5 rounded-lg bg-[#121212] p-4 font-semibold text-[#b3b3b3]">
           <li className="hover:text-white">
-            <a className="flex flex-row">
+            <Link className="flex flex-row" href={"/"}>
               <FaHome className="mr-4 mt-1" /> Home{" "}
-            </a>
+            </Link>
           </li>
           <li className="flex flex-row hover:text-white">
             <FaSearch className="mr-4 mt-1" /> Search{" "}
@@ -186,21 +150,18 @@ export const Sidebar: React.FC<DataProps> = ({ data }: DataProps) => {
           </div>
           <div className="collectionScroller h-full overflow-y-scroll rounded-lg bg-[#101010] w-full">
             <div className="collectionlist flex flex-col">
-              {filteredItems &&
+              {filteredItems.length > 0 ? 
                 filteredItems.map(
                   (
                     item: Playlist | { added_at: string; album: Album } | Artist
                   ) => {
                     if ("tracks" in item) {
-
                       return (
                         <SidebarCollection
                           key={item.id}
-                          collectionTitle={item.name}
-                          collectionCreator={item.owner.display_name}
-                          collectionCover={item.images[0]?.url ?? ""}
+                          collection={item}
                           collectionType="Playlist"
-                          isPlaying={data?.context.href === item.href}
+                          isPlaying={data?.context?.href === item.href}
                         />
                       );
                     }
@@ -208,11 +169,9 @@ export const Sidebar: React.FC<DataProps> = ({ data }: DataProps) => {
                       return (
                         <SidebarCollection
                           key={item.album.id}
-                          collectionTitle={item.album.name}
-                          collectionCreator={item.album.artists[0]?.name ?? ""}
-                          collectionCover={item.album.images[0]?.url ?? ""}
+                          collection={item}
                           collectionType="Album"
-                          isPlaying={data?.context.href === item.album.href}
+                          isPlaying={data?.context?.href === item.album.href}
                         />
                       );
                     }
@@ -220,15 +179,14 @@ export const Sidebar: React.FC<DataProps> = ({ data }: DataProps) => {
                       return (
                         <SidebarCollection
                           key={item.id}
-                          collectionTitle={item.name}
-                          collectionCover={item.images[0]?.url ?? ""}
+                          collection={item}
                           collectionType="Artist"
-                          isPlaying={data?.context.href === item.href}
+                          isPlaying={data?.context?.href === item.href}
                         />
                       );
                     }
                   }
-                )}
+                ) : <h1 className="text-center mt-5 font-normal">Nothing to see here.</h1>}
             </div>
           </div>
         </div>

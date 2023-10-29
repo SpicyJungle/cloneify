@@ -56,7 +56,6 @@ type DataProps = {
 export const Player: React.FC<DataProps> = ({ data }: DataProps) => {
   const { data: session } = useSession();
 
-
   const { isLiked } = useIsCurrentTrackSaved(
     session?.accessToken ?? "",
     data?.item?.id ?? ""
@@ -73,51 +72,47 @@ export const Player: React.FC<DataProps> = ({ data }: DataProps) => {
     .map((artist: Artist) => artist.name)
     .join(", ");
 
+  const albumCover = data?.item?.album.images[0]?.url ?? "https://community.spotify.com/t5/image/serverpage/image-id/55829iC2AD64ADB887E2A5/image-size/large?v=v2&px=999";
+  const songName = data?.item?.name ?? "No Song Playing";
+
   return (
     <footer className="flex h-full w-full flex-row justify-between bg-opacity-0 px-5">
-      {data?.item && (
-        <>
-          <div className="songInfo flex h-full w-1/6 items-center py-1">
+          <div className="songInfo flex h-full w-1/5 items-center py-1 gap-2">
             <div
               className="aspect-square h-4/6 rounded"
               style={
-                data.item.album.images[0]?.url
-                  ? {
+                  {
                       backgroundImage: `url(${
-                        data?.item?.album.images[0]?.url ?? ""
+                        albumCover
                       })`,
                       backgroundSize: "cover",
                       backgroundPosition: "center",
                       backgroundRepeat: "no-repeat",
                     }
-                  : {
-                      backgroundColor: "#333333",
-                    }
               }
             />
-            <div className="ml-3 cursor-pointer">
-              <h1 className="font-medium text-white hover:underline">
-                {data.item.name}
+            <div className="cursor-pointer">
+              <h1 className="font-medium text-white hover:underline whitespace-nowrap overflow-scroll hiddenScroller overflow-y-hidden">
+                {songName ?? "No Song Playing"}
               </h1>
               <h2 className="text-xs text-[#b3b3b3] hover:text-white hover:underline">
                 {artistList}
               </h2>
             </div>
             <AiOutlineHeart
-              className={`ml-4 text-xl ${
-                isLiked ? "text-[#1ed760]" : "text-[#b3b3b3] hover:text-white"
+              className={`text-xl ${
+                isLiked ? "text-spotifyGreen" : "text-[#b3b3b3] hover:text-white"
               } `}
+              // TODO: find out why the heart doesnt show up when long title
             />
           </div>
-        </>
-      )}
-      <div className="player flex w-4/6 flex-col gap-y-3 text-white">
+      <div className="player flex w-4/5 flex-col gap-y-3 text-white">
         <div
           className={`buttons mt-2 flex w-full flex-row items-center justify-center gap-x-3 text-xl text-[#b3b3b3]`}
         >
           <button
             className={`${`shuffle ${
-              data?.shuffle_state ? "text-[#1ed760]" : "hover:text-[#eaeaea]"
+              data?.shuffle_state ? "text-spotifyGreen" : "hover:text-[#eaeaea]"
             }`}`}
           >
             {" "}
@@ -137,7 +132,7 @@ export const Player: React.FC<DataProps> = ({ data }: DataProps) => {
           <button
             className={`${`repeat ${
               ["track", "context"].includes(data?.repeat_state ?? "off")
-                ? "text-[#1ed760]"
+                ? "text-spotifyGreen"
                 : "hover:text-[#eaeaea]"
             }`}`}
           >
@@ -160,7 +155,7 @@ export const Player: React.FC<DataProps> = ({ data }: DataProps) => {
           }`}</span>
         </div>
       </div>
-      <div className="controls flex h-full flex-row items-center justify-evenly gap-x-3 text-lg text-[#b3b3b3]">
+      <div className="controls flex h-full w-1/5 flex-row items-center justify-evenly gap-x-3 text-lg text-[#b3b3b3]">
         <BiMicrophone className="hover:scale-105 hover:text-white" />
         <BiAddToQueue className="hover:scale-105 hover:text-white" />
         <BiDevices className="hover:scale-105 hover:text-white" />

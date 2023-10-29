@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 interface playlistCardInfo {
   title: string;
   description: string;
@@ -7,24 +9,12 @@ interface playlistCardInfo {
 }
 
 export const PlaylistCard = ({ data }: { data: playlistCardInfo }) => {
+  const { image, isArtists, title, description } = data;
   return (
-    <div className="playlistcard h-60 overflow-hidden text-ellipsis rounded-lg bg-[#171717] p-4 transition-all hover:bg-[#282828]">
-      <div className="flex flex-col gap-y-2">
-        <div
-          className={`playlistcard__image h-32 w-32 bg-red-500 ${data.isArtists ? "rounded-full" : "rounded-lg"}`}
-          style={{
-            backgroundImage: `url(${data.image})`,
-            backgroundSize: "cover",
-            boxShadow: `0px 8px 24px 0px rgba(0,0,0,0.5)`,
-
-          }}
-        />
-
-        <div className="h-28 text-ellipsis">
-          <h3 className="font-bold text-white w-32 overflow-hidden text-ellipsis">{data.title}</h3>
-          <p className="w-32 text-sm text-[#9c9c9c]">{data.description}</p>
-        </div>
-      </div>
+    <div className={`playlistcard h-64 overflow-hidden text-ellipsis rounded-lg bg-[#171717] p-4 transition-all hover:bg-[#282828] w-full`}>
+      <Image src={image} alt="Playlist Cover" className={`${isArtists ? "rounded-full" : "rounded-md"} shadow-lg w-full object-cover aspect-square`} width={0} height={0} sizes="100vw"/>
+      <h3 className="text-white text-base font-bold mt-2 text-ellipsis overflow-hidden whitespace-nowrap">{title}</h3>
+      <p className="text-[#b3b3b3] text-xs mt-1 text-ellipsis overflow-hidden whitespace-nowrap" title={description}>{description}</p>
     </div>
   );
 };

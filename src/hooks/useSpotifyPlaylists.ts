@@ -1,42 +1,5 @@
 import { useState, useEffect } from "react";
-
-interface Playlist {
-  collaborative: boolean;
-    description: string;
-    external_urls: {
-        spotify: string;
-    };
-    href: string;
-    id: string;
-    images: {
-        height: number;
-        url: string;
-        width: number;
-    }[];
-    name: string;
-    owner: {
-        external_urls: {
-            spotify: string;
-        };
-        followers: {
-            href: null;
-            total: number;
-        };
-        href: string;
-        id: string;
-        type: string;
-        uri: string;
-        display_name: string;
-    };
-    public: boolean;
-    snapshot_id: string;
-    tracks: {
-        href: string;
-        total: number;
-    };
-    type: string;
-    uri: string;
-}
+import type { Playlist } from "~/types/playlist";
 
 interface SpotifyResponse {
   items: Playlist[];

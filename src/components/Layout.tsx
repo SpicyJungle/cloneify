@@ -6,6 +6,7 @@ import { Player } from "./player";
 import type { Track } from "~/types/track";
 import { useQuery } from "@tanstack/react-query";
 import type { PlayerResponse } from "~/types/PlayerResponse";
+import { useSession } from "next-auth/react";
 
 
 
@@ -32,16 +33,24 @@ export const Layout = ({ children }: { children: ReactNode }) => {
     }
   }, [])
 
+
+  const { data: session } = useSession();
+
   const { status, data, error, isFetching } = useQuery({
     queryKey: ["player"],
-    queryFn: async (): Promise<PlayerResponse> => {
-      const res = await fetch("/api/player");
+    queryFn: async (): Promise<PlayerResponse | null> => {
+      if (!session) return null;
+      const res = await fetch(`https://api.spotify.com/v1/me/player`, {
+        headers: {
+          Authorization: `Bearer ${session.accessToken}}`,
+        },
+      });
       const d = (await res.json()) as PlayerResponse;
       return d;
     },
     refetchInterval: 1000,
   });
-
+  
   return (
     <main className="flex h-screen max-h-screen w-screen flex-col overflow-x-hidden overflow-y-hidden bg-black">
       <Head>
@@ -50,7 +59,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
           name="description"
           content="A clone of spotify, just for practice."
         />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/Untitled.png" />
       </Head>
       <div className="max-w-screen flex h-[90%] w-screen flex-row p-2">
         <Sidebar data={data ?? null}/>
@@ -62,7 +71,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
           <div className="sticky top-0">
             <Header />
           </div>
-          <div className="ml-3 p-4">{children}</div>
+          <div className="ml-3 p-4 h-full">{children}</div>
         </div>
       </div>
       <div className="h-[9%]">

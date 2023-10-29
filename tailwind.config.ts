@@ -1,9 +1,18 @@
-import { type Config } from "tailwindcss";
+/** @type {import('tailwindcss').Config} */
 
-export default {
+module.exports = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      gridTemplateColumns: {
+        'cards': 'repeat(auto-fill, minmax(170px, 1fr))',
+      },
+      colors: {
+        'recentlyPlayed': 'rgba(255,255,255,0.1)',
+        'recentlyPlayedHover': 'rgba(255,255,255,0.2)',
+        'spotifyGreen': '#1DB954',
+      }
+    },
   },
   plugins: [],
-} satisfies Config;
+};

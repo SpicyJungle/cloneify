@@ -34,7 +34,15 @@ export interface Playlist {
     };
     public: boolean;
     snapshot_id: string;
-    tracks: Track[];
+    tracks: {
+        href: string;
+        limit: number;
+        next: string;
+        offset: number;
+        previous: string;
+        total: number;
+        items: Track[];
+    };
     type: string;
     uri: string;
 }

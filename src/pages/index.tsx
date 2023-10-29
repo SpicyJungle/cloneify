@@ -10,8 +10,12 @@ import useSpotifyPlaylists from "~/hooks/useSpotifyPlaylists";
 import useFollowedArtists from "~/hooks/useFollowedArtists";
 import type { Album } from "~/types/album";
 import type { Playlist } from "~/types/playlist";
-
-const Home: NextPage = () => {
+import type { PlayerResponse } from "~/types/PlayerResponse";
+import { Artist } from "~/types/artist";
+type DataProps = {
+  data: PlayerResponse | null;
+};
+const Home: NextPage<DataProps> = ({ data }: DataProps) => {
   const { data: session, status } = useSession();
   const recentlyPlayed = useRecentTracks(session?.accessToken ?? "");
   const playlists = useSpotifyPlaylists(session?.accessToken ?? "");
@@ -92,11 +96,14 @@ const Home: NextPage = () => {
 
   const today = new Date();
   const hour = today.getHours();
+  console.log(status)
 
   return (
     <Layout>
       <div className="h-full">
+        { status === "authenticated" ? 
         <div className="flex h-full w-full flex-col gap-y-4">
+          
           <div className="flex h-1/3 flex-col">
             <h3 className="mb-2 flex flex-row justify-between text-3xl font-bold text-white">
               {hour > 18 || hour < 3
@@ -109,14 +116,14 @@ const Home: NextPage = () => {
               {cardInfos?.map((item: Album | Playlist) => {
                 return (
                   <RecentlyPlayedCard
-                    key={item.id}
-                    data={{
-                      title: item.name,
+                  key={item.id}
+                  data={{
+                    title: item.name,
                       image: item?.images[0]?.url ?? "",
                     }}
-                  />
-                );
-              })}
+                    />
+                    );
+                  })}
             </div>
           </div>
           <div className="flex h-full flex-col gap-y-4">
@@ -124,7 +131,7 @@ const Home: NextPage = () => {
               <>
                 <PlaylistSection
                   playlists={
-                    playlists?.playlists?.map((item) => {
+                    playlists.playlists?.map((item) => {
                       return {
                         title: item.name,
                         image: item.images[0]?.url ?? "",
@@ -135,7 +142,7 @@ const Home: NextPage = () => {
                   }
                   sectionTitle="Your Playlists"
                   isArtists={false}
-                />
+                  />
                 <PlaylistSection
                   playlists={
                     followedArtist?.response?.map((item) => {
@@ -149,14 +156,15 @@ const Home: NextPage = () => {
                   }
                   sectionTitle="Your favorite artists"
                   isArtists={true}
-                />
+                  />
                 <PlaylistSection 
                   playlists={
                     savedAlbums.albums.map((item) => {
                       return {
                         title: item.album.name,
                         image: item.album.images[0]?.url ?? "",
-                        description: item.album.artists[0]?.name ?? "",
+                        description: item.album.artists.map((artist) => artist.name)
+                        .join(", "),
                         key: item.album.id,
                       };
                     })
@@ -167,7 +175,8 @@ const Home: NextPage = () => {
               </>
             )}
           </div>
-        </div>
+        </div> : <h2 className="text-white">Not signed in, sign in to load your player status, playlists and saved albums.</h2>
+        }
       </div>
     </Layout>
   );

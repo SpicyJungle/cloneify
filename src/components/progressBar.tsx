@@ -7,7 +7,7 @@ export const ProgressBar = (props: {
 
     return (
         <div className=" h-1 w-full mt-2 bg-zinc-500 rounded-full group">
-            <div className={`h-full bg-white rounded-full text-right group-hover:bg-green-500 flex justify-end transition-all`}  style={{
+            <div className={`h-full bg-white rounded-full text-right group-hover:bg-spotifyGreen flex justify-end transition-all`}  style={{
                 width: `${completed}%`
             }}>
                 <div className={`rounded-full bg-white h-3 w-3 invisible group-hover:visible self-center transition-all`}></div>

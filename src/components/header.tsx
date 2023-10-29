@@ -8,10 +8,10 @@ export const Header = () => {
   return (
     <header className="flex h-20 w-full flex-row justify-between">
       <div className="ml-7 flex h-full flex-row items-center justify-center gap-x-2 text-3xl text-white">
-        <div className=" flex justify-center rounded-full bg-black bg-opacity-50 p-2 align-middle">
-          <MdArrowBackIos className=" text-sm " />
+        <div className=" flex justify-center rounded-full bg-black bg-opacity-50 p-2 items-center">
+          <MdArrowBackIos className=" text-sm" />
         </div>
-        <div className="flex justify-center rounded-full bg-black bg-opacity-50 p-2 align-middle">
+        <div className="flex justify-center rounded-full bg-black bg-opacity-50 p-2 items-center">
           <MdArrowForwardIos className="text-sm"/>
         </div>
       </div>

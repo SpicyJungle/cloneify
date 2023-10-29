@@ -46,8 +46,8 @@ const fn = async (req: NextApiRequest, res: NextApiResponse) => {
         throw new Error("Failed to fetch playlists");
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const res: PlayerResponse = await response.json();
+      console.log("resjson done")
       return res;
     };
 
