@@ -65,16 +65,16 @@ export const Layout = ({ children }: { children: ReactNode }) => {
         <Sidebar data={data ?? null}/>
 
         <div
-          className="collectionScroller ml-2 h-full w-full overflow-y-scroll rounded-lg bg-gradient-to-b from-[#404444] to-[#121212] to-50%"
+          className="collectionScroller ml-2 h-full w-full overflow-y-scroll rounded-lg bg-gradient-to-b from-[#404444] to-[#121212] to-70%"
           id="main_content"
         >
-          <div className="sticky top-0">
+          <div className="sticky top-0 z-50">
             <Header />
           </div>
-          <div className="ml-3 p-4 h-full">{children}</div>
+          <div className="h-full">{children}</div>
         </div>
       </div>
-      <div className="h-[9%]">
+      <div className="h-[12%]">
         <Player data={data ?? null}/>
       </div>
     </main>

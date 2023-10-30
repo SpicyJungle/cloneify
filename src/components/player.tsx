@@ -76,10 +76,10 @@ export const Player: React.FC<DataProps> = ({ data }: DataProps) => {
   const songName = data?.item?.name ?? "No Song Playing";
 
   return (
-    <footer className="flex h-full w-full flex-row justify-between bg-opacity-0 px-5">
+    <footer className="flex h-full w-full flex-row justify-between px-5">
           <div className="songInfo flex h-full w-1/5 items-center py-1 gap-2">
             <div
-              className="aspect-square h-4/6 rounded"
+              className="aspect-square h-5/6 rounded"
               style={
                   {
                       backgroundImage: `url(${
@@ -95,7 +95,7 @@ export const Player: React.FC<DataProps> = ({ data }: DataProps) => {
               <h1 className="font-medium text-white hover:underline whitespace-nowrap overflow-scroll hiddenScroller overflow-y-hidden">
                 {songName ?? "No Song Playing"}
               </h1>
-              <h2 className="text-xs text-[#b3b3b3] hover:text-white hover:underline">
+              <h2 className="text-xs text-[#b3b3b3] hover:text-white hover:underline whitespace-nowrap">
                 {artistList}
               </h2>
             </div>

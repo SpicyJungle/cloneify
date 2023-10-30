@@ -1,4 +1,4 @@
-export const ProgressBar = (props: {
+export const Skeleton = (props: {
     color?: string; // tailwind color
     width?: string; // only use fractions, e.g. 1/2, 1/3, 1/4, etc.
     height?: string; // tailwind height

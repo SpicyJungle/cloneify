@@ -96,11 +96,10 @@ const Home: NextPage<DataProps> = ({ data }: DataProps) => {
 
   const today = new Date();
   const hour = today.getHours();
-  console.log(status)
 
   return (
     <Layout>
-      <div className="h-full">
+      <div className="h-full p-4">
         { status === "authenticated" ? 
         <div className="flex h-full w-full flex-col gap-y-4">
           

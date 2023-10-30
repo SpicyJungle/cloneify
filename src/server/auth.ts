@@ -87,5 +87,7 @@ export const getServerAuthSession = (ctx: {
   req: GetServerSidePropsContext["req"];
   res: GetServerSidePropsContext["res"];
 }) => {
+  console.log(env.SPOTIFY_CLIENT_ID)
+  console.log(env.SPOTIFY_CLIENT_SECRET)
   return getServerSession(ctx.req, ctx.res, authOptions);
 };

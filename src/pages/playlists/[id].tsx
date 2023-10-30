@@ -4,8 +4,12 @@ import Image from "next/image";
 
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { BiDownload, BiHeart } from "react-icons/bi";
+import { BsDownload, BsFillHeartFill, BsPlay, BsPlayFill, BsThreeDots } from "react-icons/bs";
 import { GoPrimitiveDot } from "react-icons/go";
+import { MdOutlineDownloadForOffline } from "react-icons/md";
 import { Layout } from "~/components/Layout";
+import { Skeleton } from "~/components/Skeleton";
 import type { Playlist } from "~/types/playlist";
 import type { SpotifyUserProfile } from "~/types/user";
 
@@ -15,6 +19,8 @@ function LoadingSkeleton() {
     "https://community.spotify.com/t5/image/serverpage/image-id/55829iC2AD64ADB887E2A5/image-size/large?v=v2&px=999";
 
   return (
+    <Layout>
+      
     <div className="headerinfo flex h-60 w-full flex-row gap-4">
     <div
       className="aspect-square h-full rounded-md shadow-md"
@@ -23,10 +29,10 @@ function LoadingSkeleton() {
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
-    ></div>
+      ></div>
     <div className="info ml-4 flex flex-col justify-between">
       <div className="titles mt-12">
-        <LoadingSkeleton />
+        <Skeleton />
         <h1 className="text-7xl font-bold text-white">name</h1>
         <p className="text-zinc-400 text-sm">description</p>
       </div>
@@ -38,7 +44,7 @@ function LoadingSkeleton() {
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
-        ></div>
+          ></div>
         <span className="font-bold">.....</span>
         <GoPrimitiveDot  className="text-xs"/>
         <span className="">0 likes</span>
@@ -47,6 +53,7 @@ function LoadingSkeleton() {
       </div>
     </div>
   </div>
+</Layout>
   )
 }
 
@@ -77,15 +84,8 @@ export default function Page() {
   });
 
   useEffect(() => {
-    console.log("refetching")
     void refetch();
   }, [playlistId, refetch]);
-  
-  return (
-    <Layout>
-      <LoadingSkeleton />
-    </Layout>
-  );
 
   if (status === "error")
     return (
@@ -95,7 +95,7 @@ export default function Page() {
         </div>
       </Layout>
     );
-  if (status === "loading")
+  if (status === "loading") return <LoadingSkeleton />;
   if (!data)
     return (
       <Layout>
@@ -105,7 +105,6 @@ export default function Page() {
       </Layout>
     );
   const { playlist, user } = data;
-  console.log(data);
 
   if (!playlist || !user)
     return (
@@ -118,11 +117,10 @@ export default function Page() {
 
   const { description, name } = playlist;
   const { display_name } = user;
-  console.log(playlist);
 
   return (
     <Layout>
-      <div className="headerinfo flex h-60 w-full flex-row gap-4">
+      <div className="headerinfo flex h-60 w-full flex-row gap-4 p-4">
         <div
           className="aspect-square h-full rounded-md shadow-md"
           style={{
@@ -158,6 +156,16 @@ export default function Page() {
             <GoPrimitiveDot  className="text-xs"/>
             <span className="">{playlist.tracks.total} songs</span>
           </div>
+        </div>
+      </div>
+      <div className="h-full bg-black bg-opacity-20 w-full p-4">
+        <div className="buttons inline-flex h-full w-full gap-6 ml-4">
+          <div className="playButton h-16 bg-spotifyGreen aspect-square rounded-full flex items-center justify-center">
+              <BsPlayFill className="text-black text-5xl" />
+          </div>
+          <BsFillHeartFill className="h-16 text-spotifyGreen text-3xl"/>
+          <MdOutlineDownloadForOffline className="h-16 text-zinc-400 text-3xl"/>
+          <BsThreeDots className="h-16 text-zinc-400 text-3xl"/>
         </div>
       </div>
     </Layout>
