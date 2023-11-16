@@ -20,10 +20,10 @@ export const SidebarCollection = ({
   const cover = ("added_at" in collection ? collection.album?.images[0]?.url : collection.images[0]?.url) ?? "https://community.spotify.com/t5/image/serverpage/image-id/55829iC2AD64ADB887E2A5/image-size/large?v=v2&px=999";
   const title = ("added_at" in collection ? collection.album?.name : collection.name) ?? "Unknown";
   const creator = ("added_at" in collection ? collection.album?.artists[0]?.name : "collaborative" in collection ? collection.owner.display_name : collection.name) ?? "Unknown";
-  const id = ("added_at" in collection ? collection.album?.id : collection.id) ?? "Unknown";
 
+  const url = ("added_at" in collection ? `/albums/${collection.album.id}` : `/playlists/${collection.id}`) ?? "/playlists/Unknown";
   return (
-    <Link href={`/playlists/${id}`}>
+    <Link href={url}>
     <div className={`flex h-16 w-full flex-row items-center justify-between overflow-hidden text-ellipsis whitespace-nowrap rounded-lg bg-white ${isPlaying ? " hover:bg-opacity-20 bg-opacity-10" : "hover:bg-opacity-5 bg-opacity-0"}`}>
       <div className="flex h-full w-5/6 flex-row items-center px-3">
         <div
