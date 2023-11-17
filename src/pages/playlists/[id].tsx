@@ -1,11 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { type NextPage } from "next";
-import Image from "next/image";
 
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { BiDownload, BiHeart } from "react-icons/bi";
-import { BsDownload, BsFillHeartFill, BsPlay, BsPlayFill, BsThreeDots } from "react-icons/bs";
+import { BsFillHeartFill, BsPlayFill, BsThreeDots } from "react-icons/bs";
 import { GoPrimitiveDot } from "react-icons/go";
 import { MdOutlineDownloadForOffline } from "react-icons/md";
 import { Layout } from "~/components/Layout";

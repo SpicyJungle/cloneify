@@ -1,5 +1,5 @@
-import { Album } from "./album";
-import { Artist } from "./artist";
+import type { Album } from "./album";
+import type { Artist } from "./artist";
 
 export interface Track {
     album: Album;

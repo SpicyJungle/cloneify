@@ -11,7 +11,6 @@ import useFollowedArtists from "~/hooks/useFollowedArtists";
 import type { Album } from "~/types/album";
 import type { Playlist } from "~/types/playlist";
 import type { PlayerResponse } from "~/types/PlayerResponse";
-import { Artist } from "~/types/artist";
 type DataProps = {
   data: PlayerResponse | null;
 };
@@ -99,7 +98,7 @@ const Home: NextPage<DataProps> = ({ data }: DataProps) => {
 
   return (
     <Layout>
-      <div className="h-full p-4">
+      <div className="h-full wp-4">
         { status === "authenticated" ? 
         <div className="flex h-full w-full flex-col gap-y-4">
           

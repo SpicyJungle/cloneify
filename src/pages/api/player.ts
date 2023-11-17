@@ -1,7 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getServerSession } from "next-auth";
 import { getSession } from "next-auth/react";
-import { authOptions } from "~/server/auth";
 import type { Track } from "~/types/track";
 
 interface PlayerResponse {
@@ -46,7 +44,7 @@ const fn = async (req: NextApiRequest, res: NextApiResponse) => {
         throw new Error("Failed to fetch playlists");
       }
 
-      const res: PlayerResponse = await response.json();
+      const res: PlayerResponse = await response.json() as PlayerResponse;
       console.log("resjson done")
       return res;
     };

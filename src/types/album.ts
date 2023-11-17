@@ -1,3 +1,5 @@
+import { Track } from "./track";
+
 export interface Album {
     album_type: string;
     total_tracks: number;
@@ -40,4 +42,13 @@ export interface Album {
         type: string;
         uri: string;
     }[];
+    tracks: {
+        href: string;
+        limit: number;
+        next: string;
+        offset: number;
+        previous: string;
+        total: number;
+        items: Track[];
+    }
 }

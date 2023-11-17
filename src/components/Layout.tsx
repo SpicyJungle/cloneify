@@ -3,12 +3,9 @@ import { Sidebar } from "./sidebar";
 import { Header } from "./header";
 import { useEffect, type ReactNode } from "react";
 import { Player } from "./player";
-import type { Track } from "~/types/track";
 import { useQuery } from "@tanstack/react-query";
 import type { PlayerResponse } from "~/types/PlayerResponse";
 import { useSession } from "next-auth/react";
-
-
 
 export const Layout = ({ children }: { children: ReactNode }) => {
   // add a scrolling listener

@@ -16,13 +16,10 @@ import {
   BsRepeat1,
   BsShuffle,
 } from "react-icons/bs";
-import usePlayer from "~/hooks/usePlayer";
 import { ProgressBar } from "./progressBar";
 import useIsCurrentTrackSaved from "~/hooks/useIsCurrentTrackSaved";
 import type { Artist } from "~/types/artist";
-import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Track } from "~/types/track";
-import { useState } from "react";
 
 interface PlayerResponse {
   device: {
