@@ -95,7 +95,7 @@ const TrackSection = ({tracks}: { tracks: Track[]}) => {
       <div className="w-full flex flex-col gap-4 text-white mt-2">
           {
             tracks.map((track) => {
-              return <TrackLine track={track} />
+              return <TrackLine track={track} key={track.id} />
             })
           }
       </div>

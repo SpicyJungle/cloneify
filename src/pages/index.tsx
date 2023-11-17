@@ -11,7 +11,6 @@ import useFollowedArtists from "~/hooks/useFollowedArtists";
 import type { Album } from "~/types/album";
 import type { Playlist } from "~/types/playlist";
 import type { PlayerResponse } from "~/types/PlayerResponse";
-import { Artist } from "~/types/artist";
 type DataProps = {
   data: PlayerResponse | null;
 };

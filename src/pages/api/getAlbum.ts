@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 import { Album } from "~/types/album";
-import type { Playlist } from "~/types/playlist";
 
 const fn = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession({ req });

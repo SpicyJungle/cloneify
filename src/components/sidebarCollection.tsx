@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { BiVolumeFull } from "react-icons/bi";
-import { BsPinAngle, BsPinAngleFill } from "react-icons/bs";
 import { GoPrimitiveDot } from "react-icons/go";
 import { Album } from "~/types/album";
 import { Artist } from "~/types/artist";
