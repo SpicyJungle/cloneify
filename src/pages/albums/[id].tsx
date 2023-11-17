@@ -115,13 +115,18 @@ export default function Page() {
     queryFn: async (): Promise<{
       album: Album;
       detailedArtist?: Artist; // get more info for artist image if there is only one artist
+      duration: number;
     }> => {
       const albumResponse = await fetch(`/api/getAlbum?id=${albumId}`);
       const albumData = (await albumResponse.json()) as Album;
+      const duration = albumData.tracks.items.reduce(
+        (acc, curr) => acc + curr.duration_ms,
+        0
+      );
 
       if (albumData.artists.length === 1) {
         if (!albumData.artists[0]?.href || !session?.accessToken)
-          return { album: albumData };
+          return { album: albumData, duration };
 
         const detailedArtistResponse = await fetch(albumData.artists[0].href, {
           headers: {
@@ -135,11 +140,13 @@ export default function Page() {
         return {
           album: albumData,
           detailedArtist: detailedArtistData,
+          duration
         };
       }
 
       return {
         album: albumData,
+        duration
       };
     },
     refetchInterval: 1000 * 60,
@@ -178,6 +185,15 @@ export default function Page() {
     );
 
   const { name } = album;
+  const minutes = Math.floor(data.duration / 1000 / 60);
+  const hours = Math.floor(minutes / 60);
+  const seconds = Math.floor(((data.duration / 1000) % 60) % 60);
+  let durString = ""
+  if (hours === 0) {
+    durString = `${minutes} min ${seconds} sec`;
+  } else {
+    durString = `${hours} hrs ${minutes} min`;
+  }
 
   return (
     <Layout>
@@ -190,13 +206,13 @@ export default function Page() {
             backgroundPosition: "center",
           }}
         ></div>
-        <div className="info ml-4 flex flex-col justify-between">
-          <div className="titles mt-12">
+        <div className="info ml-4 flex flex-col justify-between w-full">
+          <div className="titles -mt-32 w-5/6">
             <h1 className="text-base text-white">Album</h1>
-            <h1 className="text-7xl font-bold text-white">{name}</h1>
+            <h1 title={name} className="text-6xl font-bold text-white text-ellipsis overflow-hidden whitespace-nowrap">{name}</h1>
           </div>
           <div className="flex flex-row items-center gap-1 text-white">
-            <span className="flex flex-row items-center gap-x-2 font-bold">
+            <span className="flex flex-row items-center gap-x-1 font-bold">
               {!data.detailedArtist ? (
                 album.artists.map((artist) => {
                   return (
@@ -226,6 +242,7 @@ export default function Page() {
             <span className="">{album.release_date.slice(0, 4)}</span>
             <GoPrimitiveDot className="text-xs" />
             <span className="">{album.total_tracks} songs,</span>
+            <span className=" text-grayText">{durString}</span>
           </div>
         </div>
       </div>
