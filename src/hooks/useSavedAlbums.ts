@@ -41,18 +41,17 @@ const useSavedAlbums = (accessToken: string, limit: number) => {
           throw new Error("Failed to fetch playlists");
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const data: SpotifyResponse = await response.json();
+        const data: SpotifyResponse = await response.json() as SpotifyResponse;
 
         setLoading(false);
         setAlbums(data.items);
-      } catch (error: any) {
+      } catch (error) {
         // setError(error);
         setLoading(false);
       }
     };
 
-    fetchPlaylists().catch((error) => {
+    fetchPlaylists().catch(() => {
       //   setError(error.message);
       setLoading(false);
     });

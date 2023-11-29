@@ -58,8 +58,7 @@ const usePlayer = (accessToken: string) => {
           throw new Error("Failed to fetch playlists");
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const data: PlayerResponse = await response.json();
+        const data: PlayerResponse = await response.json() as PlayerResponse;
 
         setRepeatState(data.repeat_state)
         setShuffleState(data.shuffle_state)
@@ -68,13 +67,13 @@ const usePlayer = (accessToken: string) => {
         setTrack(data.item)
         setVolumePercent(data.device.volume_percent)
         setLoading(false);
-      } catch (error: any) {
+      } catch (error) {
         // setError(error);
         setLoading(false);
       }
     };
 
-    fetchPlaylists().catch((error) => {
+    fetchPlaylists().catch(() => {
       //   setError(error.message);
       setLoading(false);
     });

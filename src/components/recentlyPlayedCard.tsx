@@ -1,13 +1,18 @@
+import Link from "next/link";
 import { BiPlay } from "react-icons/bi";
 
 interface playlistCardInfo {
   title: string;
   image: string;
+  type: "playlists" | "albums" | "artists";
+  id: string;
 }
 
 export const RecentlyPlayedCard = ({ data }: { data: playlistCardInfo }) => {
+  const url = `/${data.type}/${data.id}`;
+
   return (
-    <div className="flex h-20 w-full flex-row rounded-md bg-recentlyPlayed hover:bg-recentlyPlayedHover align-middle transition-colors">
+    <Link href={url} className="flex h-20 w-full flex-row rounded-md bg-recentlyPlayed hover:bg-recentlyPlayedHover align-middle transition-colors">
       <div
         className="mr-2 aspect-square h-full w-auto rounded-bl-md rounded-tl-md"
         style={{
@@ -28,6 +33,6 @@ export const RecentlyPlayedCard = ({ data }: { data: playlistCardInfo }) => {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };

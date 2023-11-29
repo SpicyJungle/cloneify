@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
-import type { Playlist } from "~/types/playlist";
 import { SpotifyUserProfile } from "~/types/user";
 
 const fn = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -20,8 +19,7 @@ const fn = async (req: NextApiRequest, res: NextApiResponse) => {
         throw new Error("Failed to fetch user");
       }
 
-    //   eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const res: SpotifyUserProfile = await response.json();
+      const res: SpotifyUserProfile = await response.json() as SpotifyUserProfile;
       return res;
     };
 

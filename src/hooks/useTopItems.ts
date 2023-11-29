@@ -57,19 +57,17 @@ const useTopItems = (accessToken: string, type: 'tracks' | 'artists', amount: nu
           throw new Error("Failed to fetch top items");
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const data: SpotifyResponse = await response.json();
-        console.log(data)
+        const data: SpotifyResponse = await response.json() as SpotifyResponse;
 
         setItems(data.items);
         setLoading(false);
-      } catch (error: any) {
+      } catch (error) {
         // setError(error);
         setLoading(false);
       }
     };
 
-    fetchPlaylists().catch((error) => {
+    fetchPlaylists().catch(() => {
       // setError(error.message);
       setLoading(false);
     });
