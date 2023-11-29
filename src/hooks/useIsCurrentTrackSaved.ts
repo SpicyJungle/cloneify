@@ -25,18 +25,17 @@ const useIsCurrentTrackSaved = (accessToken: string, id: string) => {
           throw new Error("Failed to fetch top items");
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const data: boolean[] = await response.json();
+        const data: boolean[] = await response.json() as boolean[];
 
         setIsLiked(data[0]);
         setLoading(false);
-      } catch (error: any) {
+      } catch (error) {
         // setError(error);
         setLoading(false);
       }
     };
 
-    fetchIsLiked().catch((error) => {
+    fetchIsLiked().catch(() => {
       // setError(error.message);
       setLoading(false);
     });

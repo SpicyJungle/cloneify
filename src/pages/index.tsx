@@ -14,7 +14,7 @@ import type { PlayerResponse } from "~/types/PlayerResponse";
 type DataProps = {
   data: PlayerResponse | null;
 };
-const Home: NextPage<DataProps> = ({ data }: DataProps) => {
+const Home: NextPage<DataProps> = () => {
   const { data: session, status } = useSession();
   const recentlyPlayed = useRecentTracks(session?.accessToken ?? "");
   const playlists = useSpotifyPlaylists(session?.accessToken ?? "");
@@ -131,19 +131,16 @@ const Home: NextPage<DataProps> = ({ data }: DataProps) => {
                   <PlaylistSection
                     playlists={playlists.playlists ?? []}
                     sectionTitle="Your Playlists"
-                    isArtists={false}
                   />
                   <PlaylistSection
                     playlists={followedArtist?.response ?? []}
                     sectionTitle="Your favorite artists"
-                    isArtists={true}
                   />
                   <PlaylistSection
                     playlists={
                       savedAlbums.albums.map((item) => item.album) ?? []
                     }
                     sectionTitle="Saved albums"
-                    isArtists={false}
                   />
                 </>
               )}

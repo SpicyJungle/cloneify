@@ -1,8 +1,5 @@
 import { useState, useEffect } from "react";
-import type { Album } from "~/types/album";
-import type { Artist } from "~/types/artist";
 import type { Track } from "~/types/track";
-
 
 interface Context {
   type: string;
@@ -59,18 +56,17 @@ const useRecentTracks = (
           throw new Error("Failed to fetch top items");
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const data: SpotifyResponse = await response.json();
+        const data: SpotifyResponse = await response.json() as SpotifyResponse;
 
         setItems(data.items);
         setLoading(false);
-      } catch (error: any) {
+      } catch (error) {
         // setError(error);
         setLoading(false);
       }
     };
 
-    fetchTracks().catch((error) => {
+    fetchTracks().catch(() => {
       // setError(error.message);
       setLoading(false);
     });

@@ -60,7 +60,7 @@ export default function Page() {
     "https://community.spotify.com/t5/image/serverpage/image-id/55829iC2AD64ADB887E2A5/image-size/large?v=v2&px=999";
   const playlistId = router.query.id as string;
 
-  const { status, data, error, isFetching, refetch } = useQuery({
+  const { status, data, refetch } = useQuery({
     queryKey: [playlistId, "user"],
     queryFn: async (): Promise<{
       playlist: Playlist;

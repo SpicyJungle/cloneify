@@ -8,12 +8,10 @@ import { Playlist } from "~/types/playlist";
 export const SidebarCollection = ({
   collection,
   collectionType,
-  pinned,
   isPlaying,
 }: {
   collection: Playlist | { added_at: string; album: Album } | Artist;
   collectionType: string;
-  pinned?: boolean;
   isPlaying: boolean;
 }) => {
   const cover = ("added_at" in collection ? collection.album?.images[0]?.url : collection.images[0]?.url) ?? "https://community.spotify.com/t5/image/serverpage/image-id/55829iC2AD64ADB887E2A5/image-size/large?v=v2&px=999";

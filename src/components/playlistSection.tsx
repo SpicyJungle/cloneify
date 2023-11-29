@@ -7,17 +7,14 @@ import { Album } from "~/types/album";
 export const PlaylistSection = ({
   playlists,
   sectionTitle,
-  isArtists
 }: {
   playlists: Playlist[] | Album[] | Artist[];
   sectionTitle: string;
-  isArtists: boolean;
 }) => {
 
   const [visiblePlaylists, setVisiblePlaylists] = useState<Playlist[] | Album[] | Artist[]>([]);
   const containerRef = useRef<HTMLDivElement | null>(null); // Ref to the container element
 
-  // Recalculate on window resize
   useEffect(() => {
     const calculateVisiblePlaylists = () => {
       if (containerRef.current) {

@@ -8,7 +8,6 @@ import type { PlayerResponse } from "~/types/PlayerResponse";
 import { useSession } from "next-auth/react";
 
 export const Layout = ({ children }: { children: ReactNode }) => {
-  // add a scrolling listener
   useEffect(() => {
     const mainContentWindow = document.getElementById("main_content");
 
@@ -33,7 +32,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
 
   const { data: session } = useSession();
 
-  const { status, data, error, isFetching } = useQuery({
+  const { data } = useQuery({
     queryKey: ["player"],
     queryFn: async (): Promise<PlayerResponse | null> => {
       if (!session) return null;
