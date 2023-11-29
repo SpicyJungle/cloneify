@@ -49,7 +49,7 @@ interface PlayerResponse {
 
 type DataProps = {
   data: PlayerResponse | null;
-}
+};
 export const Player: React.FC<DataProps> = ({ data }: DataProps) => {
   const { data: session } = useSession();
 
@@ -58,7 +58,8 @@ export const Player: React.FC<DataProps> = ({ data }: DataProps) => {
     data?.item?.id ?? ""
   );
 
-  const progressPercentage = (100 / (data?.item?.duration_ms ?? 1)) * (data?.progress_ms ?? 0);
+  const progressPercentage =
+    (100 / (data?.item?.duration_ms ?? 1)) * (data?.progress_ms ?? 0);
   const durMinutes = Math.floor((data?.item?.duration_ms ?? 0) / 1000 / 60);
   const durSeconds = Math.floor(((data?.item?.duration_ms ?? 0) / 1000) % 60);
 
@@ -69,41 +70,38 @@ export const Player: React.FC<DataProps> = ({ data }: DataProps) => {
     .map((artist: Artist) => artist.name)
     .join(", ");
 
-  const albumCover = data?.item?.album.images[0]?.url ?? "https://community.spotify.com/t5/image/serverpage/image-id/55829iC2AD64ADB887E2A5/image-size/large?v=v2&px=999";
+  const albumCover =
+    data?.item?.album.images[0]?.url ??
+    "https://community.spotify.com/t5/image/serverpage/image-id/55829iC2AD64ADB887E2A5/image-size/large?v=v2&px=999";
   const songName = data?.item?.name ?? "No Song Playing";
 
   return (
     <footer className="flex h-full w-full flex-row justify-between px-5">
-          <div className="songInfo flex h-full w-1/5 items-center py-1 gap-2">
-            <div
-              className="aspect-square h-5/6 rounded"
-              style={
-                  {
-                      backgroundImage: `url(${
-                        albumCover
-                      })`,
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                      backgroundRepeat: "no-repeat",
-                    }
-              }
-            />
-            <div className="cursor-pointer">
-              <h1 className="font-medium text-white hover:underline whitespace-nowrap overflow-scroll hiddenScroller overflow-y-hidden">
-                {songName ?? "No Song Playing"}
-              </h1>
-              <h2 className="text-xs text-[#b3b3b3] hover:text-white hover:underline whitespace-nowrap">
-                {artistList}
-              </h2>
-            </div>
-            <AiOutlineHeart
-              className={`text-xl ${
-                isLiked ? "text-spotifyGreen" : "text-[#b3b3b3] hover:text-white"
-              } `}
-              // TODO: find out why the heart doesnt show up when long title
-            />
-          </div>
-      <div className="player flex w-4/5 flex-col gap-y-3 text-white">
+      <div className="songInfo flex h-full w-1/4 items-center gap-2 py-1">
+        <div
+          className="aspect-square h-5/6 w-1/5 rounded"
+          style={{
+            backgroundImage: `url(${albumCover})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+        />
+        <div className="cursor-pointer w-4/6">
+          <h1 className="overflow-y-hidden overflow-hidden overflow-ellipsis whitespace-nowrap font-medium text-white hover:underline">
+            {songName ?? "No Song Playing"}
+          </h1>
+          <h2 className="whitespace-nowrap text-xs text-[#b3b3b3] hover:text-white hover:underline">
+            {artistList}
+          </h2>
+        </div>
+        <AiOutlineHeart
+          className={`text-xl w-1/6 ${
+            isLiked ? "text-spotifyGreen" : "text-[#b3b3b3] hover:text-white" 
+          } `}
+        />
+      </div>
+      <div className="player flex w-2/4 flex-col gap-y-3 text-white">
         <div
           className={`buttons mt-2 flex w-full flex-row items-center justify-center gap-x-3 text-xl text-[#b3b3b3]`}
         >
@@ -120,7 +118,11 @@ export const Player: React.FC<DataProps> = ({ data }: DataProps) => {
             <BiSkipPrevious />{" "}
           </button>
           <button className="play text-3xl text-white hover:scale-105">
-            {data?.is_playing ? <BsFillPauseCircleFill /> : <BsFillPlayCircleFill />}
+            {data?.is_playing ? (
+              <BsFillPauseCircleFill />
+            ) : (
+              <BsFillPlayCircleFill />
+            )}
           </button>
           <button className="next text-3xl hover:text-[#eaeaea]">
             {" "}
@@ -152,7 +154,7 @@ export const Player: React.FC<DataProps> = ({ data }: DataProps) => {
           }`}</span>
         </div>
       </div>
-      <div className="controls flex h-full w-1/5 flex-row items-center justify-evenly gap-x-3 text-lg text-[#b3b3b3]">
+      <div className="controls flex h-full w-1/4 flex-row items-center justify-evenly gap-x-3 text-lg text-[#b3b3b3]">
         <BiMicrophone className="hover:scale-105 hover:text-white" />
         <BiAddToQueue className="hover:scale-105 hover:text-white" />
         <BiDevices className="hover:scale-105 hover:text-white" />

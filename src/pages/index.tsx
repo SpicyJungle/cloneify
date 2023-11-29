@@ -98,83 +98,63 @@ const Home: NextPage<DataProps> = ({ data }: DataProps) => {
 
   return (
     <Layout>
-      <div className="h-full wp-4">
-        { status === "authenticated" ? 
-        <div className="flex h-full w-full flex-col gap-y-4">
-          
-          <div className="flex h-1/3 flex-col">
-            <h3 className="mb-2 flex flex-row justify-between text-3xl font-bold text-white">
-              {hour > 18 || hour < 3
-                ? "Good Evening"
-                : hour > 12
-                ? "Good Afternoon"
-                : "Good Morning"}
-            </h3>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {cardInfos?.map((item: Album | Playlist) => {
-                return (
-                  <RecentlyPlayedCard
-                  key={item.id}
-                  data={{
-                    title: item.name,
-                      image: item?.images[0]?.url ?? "",
-                    }}
+      <div className="h-full p-4">
+        {status === "authenticated" ? (
+          <div className="flex h-full w-full flex-col gap-y-4">
+            <div className="flex h-1/3 flex-col">
+              <h3 className="mb-2 flex flex-row justify-between text-3xl font-bold text-white">
+                {hour > 18 || hour < 3
+                  ? "Good Evening"
+                  : hour > 12
+                  ? "Good Afternoon"
+                  : "Good Morning"}
+              </h3>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {cardInfos?.map((item: Album | Playlist) => {
+                  return (
+                    <RecentlyPlayedCard
+                      key={item.id}
+                      data={{
+                        title: item.name,
+                        image: item?.images[0]?.url ?? "",
+                        type: "collaborative" in item ? "playlists" : "albums",
+                        id: item.id,
+                      }}
                     />
-                    );
-                  })}
+                  );
+                })}
+              </div>
+            </div>
+            <div className="flex h-full flex-col gap-y-4">
+              {session.accessToken && (
+                <>
+                  <PlaylistSection
+                    playlists={playlists.playlists ?? []}
+                    sectionTitle="Your Playlists"
+                    isArtists={false}
+                  />
+                  <PlaylistSection
+                    playlists={followedArtist?.response ?? []}
+                    sectionTitle="Your favorite artists"
+                    isArtists={true}
+                  />
+                  <PlaylistSection
+                    playlists={
+                      savedAlbums.albums.map((item) => item.album) ?? []
+                    }
+                    sectionTitle="Saved albums"
+                    isArtists={false}
+                  />
+                </>
+              )}
             </div>
           </div>
-          <div className="flex h-full flex-col gap-y-4">
-            {session?.accessToken && (
-              <>
-                <PlaylistSection
-                  playlists={
-                    playlists.playlists?.map((item) => {
-                      return {
-                        title: item.name,
-                        image: item.images[0]?.url ?? "",
-                        description: item.description,
-                        key: item.id,
-                      };
-                    }) ?? []
-                  }
-                  sectionTitle="Your Playlists"
-                  isArtists={false}
-                  />
-                <PlaylistSection
-                  playlists={
-                    followedArtist?.response?.map((item) => {
-                      return {
-                        title: item.name,
-                        image: item.images[0]?.url ?? "",
-                        description: "Artist",
-                        key: item.id,
-                      };
-                    }) ?? []
-                  }
-                  sectionTitle="Your favorite artists"
-                  isArtists={true}
-                  />
-                <PlaylistSection 
-                  playlists={
-                    savedAlbums.albums.map((item) => {
-                      return {
-                        title: item.album.name,
-                        image: item.album.images[0]?.url ?? "",
-                        description: item.album.artists.map((artist) => artist.name)
-                        .join(", "),
-                        key: item.album.id,
-                      };
-                    })
-                  }
-                  sectionTitle="Saved albums"
-                  isArtists={false}
-                  />
-              </>
-            )}
-          </div>
-        </div> : <h2 className="text-white">Not signed in, sign in to load your player status, playlists and saved albums.</h2>
-        }
+        ) : (
+          <h2 className="text-white">
+            Not signed in, sign in to load your player status, playlists and
+            saved albums.
+          </h2>
+        )}
       </div>
     </Layout>
   );

@@ -1,27 +1,22 @@
+import { Playlist } from "~/types/playlist";
 import { PlaylistCard } from "./playlistCard";
 import React, { useEffect, useRef, useState } from 'react';
-
-interface playlistCardInfo {
-  title: string;
-  description: string;
-  image: string;
-  key: string;
-}
+import { Artist } from "~/types/artist";
+import { Album } from "~/types/album";
 
 export const PlaylistSection = ({
   playlists,
   sectionTitle,
   isArtists
 }: {
-  playlists: playlistCardInfo[];
+  playlists: Playlist[] | Album[] | Artist[];
   sectionTitle: string;
   isArtists: boolean;
 }) => {
 
-  const [visiblePlaylists, setVisiblePlaylists] = useState<playlistCardInfo[]>([]);
+  const [visiblePlaylists, setVisiblePlaylists] = useState<Playlist[] | Album[] | Artist[]>([]);
   const containerRef = useRef<HTMLDivElement | null>(null); // Ref to the container element
 
-  
   // Recalculate on window resize
   useEffect(() => {
     const calculateVisiblePlaylists = () => {
@@ -44,6 +39,8 @@ export const PlaylistSection = ({
     };
   }, [playlists]);
 
+  
+
   return ( 
     <div className="w-full">
       <h3 className="text-3xl text-white font-bold hover:underline">{sectionTitle}</h3>
@@ -51,14 +48,8 @@ export const PlaylistSection = ({
         {visiblePlaylists.map((item) => {
           return (
             <PlaylistCard
-              key={item.key}
-              data={{
-                title: item.title,
-                description: item.description,
-                image: item.image,
-                key: item.key,
-                isArtists: isArtists,
-              }}
+              key={item.id}
+              data={item}
             />
           );
         })}

@@ -15,6 +15,7 @@ import { MdOutlineDownloadForOffline } from "react-icons/md";
 
 import { Layout } from "~/components/Layout";
 import { Skeleton } from "~/components/Skeleton";
+import usePlayer from "~/hooks/usePlayer";
 
 import { Album } from "~/types/album";
 import { Artist } from "~/types/artist";
@@ -62,7 +63,7 @@ function LoadingSkeleton() {
   );
 }
 
-const TrackLine = ({track}: { track: Track }) => {
+const TrackLine = ({track, isPlaying}: { track: Track, isPlaying: boolean }) => {
   const durMinutes = Math.floor((track.duration_ms ?? 0) / 1000 / 60);
   const durSeconds = Math.floor(((track.duration_ms ?? 0) / 1000) % 60);
 
@@ -70,8 +71,8 @@ const TrackLine = ({track}: { track: Track }) => {
     <div className="trackGrid h-14 flex items-center justify-center bg-white bg-opacity-0 hover:bg-opacity-20 px-4 rounded-lg">
       <div className="text-grayText">{track.track_number}</div>
       <div className="flex flex-col">
-        <span>{track.name}</span>
-        <span className="text-sm text-grayText inline-flex items-center">
+        <span className={`${isPlaying ? "text-spotifyGreen" : "text-grayText"}`}>{track.name}</span>
+        <span className={`text-sm text-grayText inline-flex items-center`}>
           {track.explicit && <BsExplicitFill className="mr-2"/>}
           {track.artists.map((artist: Artist) => {return artist.name}).join(", ")}
           </span>
@@ -83,7 +84,7 @@ const TrackLine = ({track}: { track: Track }) => {
   )
 };
 
-const TrackSection = ({tracks}: { tracks: Track[]}) => {
+const TrackSection = ({tracks, currentlyPlaying}: { tracks: Track[], currentlyPlaying: Track | undefined}) => {
   return (
     <div className="trackWrapper w-full flex flex-col">
       <div className="w-full titles text-zinc-400 trackGrid p-4 text-lg">
@@ -95,7 +96,7 @@ const TrackSection = ({tracks}: { tracks: Track[]}) => {
       <div className="w-full flex flex-col gap-4 text-white mt-2">
           {
             tracks.map((track) => {
-              return <TrackLine track={track} key={track.id} />
+              return <TrackLine track={track} key={track.id} isPlaying={track.id === currentlyPlaying?.id}/>
             })
           }
       </div>
@@ -109,6 +110,7 @@ export default function Page() {
     "https://community.spotify.com/t5/image/serverpage/image-id/55829iC2AD64ADB887E2A5/image-size/large?v=v2&px=999";
   const albumId = router.query.id as string;
   const { data: session } = useSession();
+  const playerData = usePlayer(session?.accessToken!);
 
   const { status, data, error, isFetching, refetch } = useQuery({
     queryKey: [albumId],
@@ -246,7 +248,7 @@ export default function Page() {
           </div>
         </div>
       </div>
-      <div className="h-full w-full bg-black bg-opacity-20 p-4 flex flex-col">
+      <div className=" min-h-full w-full bg-black bg-opacity-20 p-4 flex flex-col">
         <div className="buttons ml-4 inline-flex w-full gap-6">
           <div className="playButton flex aspect-square h-16 items-center justify-center rounded-full bg-spotifyGreen">
             <BsPlayFill className="text-5xl text-black" />
@@ -255,7 +257,7 @@ export default function Page() {
           <MdOutlineDownloadForOffline className="h-16 text-3xl text-zinc-400" />
           <BsThreeDots className="h-16 text-3xl text-zinc-400" />
         </div>
-        <TrackSection tracks={album.tracks.items} />
+        <TrackSection tracks={album.tracks.items} currentlyPlaying={playerData.track}/>
       </div>
     </Layout>
   );
