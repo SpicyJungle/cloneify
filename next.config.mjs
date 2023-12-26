@@ -63,6 +63,18 @@ const config = {
         port: '',
         pathname: '*/**',
       },    
+      {
+        protocol: 'https',
+        hostname: 'newjams-images.scdn.co',
+        port: '',
+        pathname: '*/**',
+      },    
+      {
+        protocol: 'https',
+        hostname: 'wrapped-images.spotifycdn.com',
+        port: '',
+        pathname: '*/**',
+      },    
     ]
   }
 };
