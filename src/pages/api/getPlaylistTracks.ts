@@ -3,8 +3,27 @@ import { getSession } from "next-auth/react";
 import type { Playlist } from "~/types/playlist";
 import { Track } from "~/types/track";
 
+interface NewTrackItemRenameThis {
+    added_at: string;
+    added_by: {
+        external_urls: {
+            spotify: string;
+        };
+        href: string;
+        id: string;
+        type: string;
+        uri: string;
+    };
+    is_local: boolean;
+    primary_color: null;
+    track: Track;
+    video_thumbnail: {
+        url: null;
+    };
+}
+
 interface SpotifyResponse {
-    items: Track[];
+    items: NewTrackItemRenameThis[];
     href: string;
     limit: number;
     next: string;
@@ -12,6 +31,7 @@ interface SpotifyResponse {
     offset: number;
     total: number;
   }
+
 
 const fn = async (req: NextApiRequest, res: NextApiResponse) => {
     const session = await getSession({ req });
@@ -22,7 +42,7 @@ const fn = async (req: NextApiRequest, res: NextApiResponse) => {
     
     const allTracks = [];
     try {
-      const fetchTracks = async (offset: number): Promise<Track[]> => {
+      const fetchTracks = async (offset: number): Promise<NewTrackItemRenameThis[]> => {
         const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks?offset=${offset}`, {
           headers: {
             Authorization: `Bearer ${session.accessToken}`,

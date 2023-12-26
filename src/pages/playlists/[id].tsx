@@ -86,7 +86,7 @@ const TrackLine = ({track, isPlaying, index}: { track: Track, isPlaying: boolean
   )
 };
 
-const TrackSection = ({tracks, currentlyPlaying}: { tracks: Track[], currentlyPlaying: Track | undefined}) => {
+const TrackSection = ({tracks, currentlyPlaying}: { tracks: PlaylistTrack[], currentlyPlaying: Track | undefined}) => {
   return (
     <div className="trackWrapper w-full flex flex-col">
       <div className="w-full titles text-zinc-400 trackGrid p-4 text-lg">
@@ -98,13 +98,34 @@ const TrackSection = ({tracks, currentlyPlaying}: { tracks: Track[], currentlyPl
       <div className="w-full flex flex-col gap-4 text-white mt-2">
           {
             tracks.map((track, index) => {
-              return <TrackLine track={track.track} key={track.id} isPlaying={track.id === currentlyPlaying?.id} index={index}/>
+              return <TrackLine track={track.track} key={track.track.id} isPlaying={track.track.id === currentlyPlaying?.id} index={index}/>
             })
           }
       </div>
     </div>
   );
 };
+
+
+interface PlaylistTrack {
+  added_at: string;
+  added_by: {
+      external_urls: {
+          spotify: string;
+      };
+      href: string;
+      id: string;
+      type: string;
+      uri: string;
+  };
+  is_local: boolean;
+  primary_color: null;
+  track: Track;
+  video_thumbnail: {
+      url: null;
+  };
+}
+
 
 export default function Page() {
   const router = useRouter();
@@ -120,15 +141,15 @@ export default function Page() {
       playlist: Playlist;
       user: SpotifyUserProfile;
       duration: number;
-      tracks: Track[];
+      tracks: PlaylistTrack[];
     }> => {
       const playlistResponse = await fetch(`/api/getPlaylist?id=${playlistId}`);
       const playlistData = (await playlistResponse.json()) as Playlist;
       
       const tracks = await fetch(`/api/getPlaylistTracks?id=${playlistId}&total=${playlistData.tracks.total}`);
-      const tracksData = (await tracks.json()) as Track[];
+      const tracksData = (await tracks.json()) as PlaylistTrack[];
       const duration = tracksData.reduce(
-        (acc, curr) => acc + (curr.duration_ms ?? 0),
+        (acc, curr) => acc + (curr.track.duration_ms ?? 0),
         0
       );
       
@@ -188,6 +209,7 @@ export default function Page() {
     durString = `${hours} hrs ${minutes} min`;
   }
 
+  console.log(data.tracks)
   return (
     <Layout>
       <div className="headerinfo flex h-52 w-full flex-row items-end gap-4 p-4">
